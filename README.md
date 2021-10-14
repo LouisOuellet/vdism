@@ -68,10 +68,4 @@ $VDIKEY="id_rsa.key";
 $VDIDN="domain";
 $VDIPORT="3389";
 ?>
-<<<<<<< HEAD
 ```
-
-
-=======
-```
->>>>>>> 050a2a9ef197a4256bac0d7c63aca0769ec7cbb3
