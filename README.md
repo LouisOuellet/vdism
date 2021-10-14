@@ -1,0 +1,2 @@
+# vdism
+VDI Session Manager
