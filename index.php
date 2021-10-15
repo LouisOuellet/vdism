@@ -83,7 +83,7 @@ if(isset($_SESSION['LDAPUSER'])){
         $VMStatus=$ssh->exec("qm status $VMID");
         $VMStatus=str_replace("status: ","",$VMStatus);
         $VMDNS=$VMName.$settings['vdi']['domain'];
-        $VMService=$ssh->exec("nmap -Pn -p $settings['vdi']['port'] $VMDNS | grep $settings['vdi']['port'] | awk {'print $2'}");
+        $VMService=$ssh->exec("nmap -Pn -p ".$settings['vdi']['port']." $VMDNS | grep ".$settings['vdi']['port']." | awk {'print $2'}");
         $VDILatency=$ssh->exec("fping -c 1 $VMDNS 2>/dev/null | awk {'print $6'}");
         $VMLatency=exec("fping -c 1 $VMDNS 2>/dev/null | awk {'print $6'}");
     }
