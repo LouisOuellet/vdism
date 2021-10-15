@@ -21,7 +21,7 @@ if(isset($_SESSION['LDAPUSER'])){
     if(isset($_POST['LDAPUSER']) and isset($_POST['LDAPPASS']) and ($_POST['LDAPUSER'] != "") and ($_POST['LDAPPASS'] != "")){
         $LDAPUSER=$_POST['LDAPUSER'];
         $LDAPPASS=$_POST['LDAPPASS'];
-        $LDAP = ldap_connect("ldap://$settings['ldap']['host']");
+        $LDAP = ldap_connect("ldap://".$settings['ldap']['host']);
         ldap_set_option($LDAP, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($LDAP, LDAP_OPT_REFERRALS, 0);
         $bind = @ldap_bind($LDAP, $settings['ldap']['domain']."\\".$LDAPUSER, $LDAPPASS);
@@ -39,8 +39,8 @@ if(isset($_SESSION['LDAPUSER'])){
     $key = new Crypt_RSA();
     if(isset($settings['vdi']['password']) and ($settings['vdi']['password'] != "")){
         if(isset($settings['vdi']['key']) and ($settings['vdi']['key'] != "")){
-            $key->setPassword("$settings['vdi']['password']");
-            $key->loadKey(file_get_contents("$settings['vdi']['key']"));
+            $key->setPassword($settings['vdi']['password']);
+            $key->loadKey(file_get_contents($settings['vdi']['key']));
             if (!$ssh->login('username', $key)) {
                 $ERROR="Wrong username and/or password and/or key";
             }
@@ -51,7 +51,7 @@ if(isset($_SESSION['LDAPUSER'])){
         }
     } else {
         if(isset($settings['vdi']['key']) and ($settings['vdi']['key'] != "")){
-            $key->loadKey(file_get_contents("$settings['vdi']['key']"));
+            $key->loadKey(file_get_contents($settings['vdi']['key']));
             if (!$ssh->login('username', $key)) {
                 $ERROR="Wrong username and/or key";
             }
@@ -82,7 +82,7 @@ if(isset($_SESSION['LDAPUSER'])){
         }
         $VMStatus=$ssh->exec("qm status $VMID");
         $VMStatus=str_replace("status: ","",$VMStatus);
-        $VMDNS="$VMName.$settings['vdi']['domain']";
+        $VMDNS=$VMName.$settings['vdi']['domain'];
         $VMService=$ssh->exec("nmap -Pn -p $settings['vdi']['port'] $VMDNS | grep $settings['vdi']['port'] | awk {'print $2'}");
         $VDILatency=$ssh->exec("fping -c 1 $VMDNS 2>/dev/null | awk {'print $6'}");
         $VMLatency=exec("fping -c 1 $VMDNS 2>/dev/null | awk {'print $6'}");
