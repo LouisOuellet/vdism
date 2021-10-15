@@ -130,31 +130,31 @@ if(isset($_SESSION['LDAPUSER'])){
         </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-            <form class="form-inline my-2 my-lg-0" method="post">
-                <input class="btn btn-outline-primary my-2 my-sm-0 tooltip-test" data-toggle="modal" data-target="#Loading" type="submit" title="Refresh" value="Refresh">
-            </form>
+          <form class="form-inline my-2 my-lg-0" method="post">
+            <input class="btn btn-outline-primary my-2 my-sm-0 tooltip-test" data-toggle="modal" data-target="#Loading" type="submit" title="Refresh" value="Refresh">
+          </form>
         </ul>
         <?php if(isset($_SESSION['LDAPUSER'])){ ?>
-            <form class="form-inline my-2 my-lg-0" method="post">
-                <input name="ACTION" type="text" style="display:none" value="logout">
-                <input class="btn btn-primary my-2 my-sm-0 tooltip-test" title="Logout" data-toggle="modal" data-target="#Loading" type="submit" value="<?php echo $_SESSION['LDAPUSER'] ?>">
-            </form>
+          <form class="form-inline my-2 my-lg-0" method="post">
+            <input name="ACTION" type="text" style="display:none" value="logout">
+            <input class="btn btn-primary my-2 my-sm-0 tooltip-test" title="Logout" data-toggle="modal" data-target="#Loading" type="submit" value="<?php echo $_SESSION['LDAPUSER'] ?>">
+          </form>
         <?php } else { ?>
-            <form class="form-inline my-2 my-lg-0" method="post">
-                <input class="form-control mr-sm-2" name="LDAPUSER" type="text" placeholder="Username" aria-label="Username">
-                <input class="form-control mr-sm-2" name="LDAPPASS" type="password" placeholder="Password" aria-label="Password">
-                <input class="btn btn-primary my-2 my-sm-0 tooltip-test" data-toggle="modal" data-target="#Loading" type="submit" title="Login" value="Login">
-            </form>
+          <form class="form-inline my-2 my-lg-0" method="post">
+            <input class="form-control mr-sm-2" name="LDAPUSER" type="text" placeholder="Username" aria-label="Username">
+            <input class="form-control mr-sm-2" name="LDAPPASS" type="password" placeholder="Password" aria-label="Password">
+            <input class="btn btn-primary my-2 my-sm-0 tooltip-test" data-toggle="modal" data-target="#Loading" type="submit" title="Login" value="Login">
+          </form>
         <?php } ?>
       </div>
     </nav>
     <main role="main" class="container">
     <div class="modal fade" id="Loading" aria-hidden="true" style="z-index:999999999">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="spinner-border text-primary" style="width: 100px; height: 100px; margin-left:175px;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="spinner-border text-primary" style="width: 100px; height: 100px; margin-left:175px;" role="status">
+          <span class="sr-only">Loading...</span>
         </div>
+      </div>
     </div>
     <?php if(isset($_SESSION['LDAPUSER'])){ ?>
         <?php if(!isset($ERROR)){ ?>
