@@ -6,7 +6,7 @@ session_start();
 $settings=json_decode(file_get_contents(dirname(__FILE__) . '/settings.json'),true);
 
 // Disable Error Reporting
-error_reporting(0);
+// error_reporting(0);
 
 if(isset($_SESSION['LDAPUSER'])){
   if(isset($_POST['ACTION']) and ($_POST['ACTION'] == "logout")){
@@ -18,19 +18,19 @@ if(isset($_SESSION['LDAPUSER'])){
     header('Refresh: ' . 0);
   }
 } else {
-    if(isset($_POST['LDAPUSER']) and isset($_POST['LDAPPASS']) and ($_POST['LDAPUSER'] != "") and ($_POST['LDAPPASS'] != "")){
-        $LDAPUSER=$_POST['LDAPUSER'];
-        $LDAPPASS=$_POST['LDAPPASS'];
-        $LDAP = ldap_connect("ldap://".$settings['ldap']['host']);
-        ldap_set_option($LDAP, LDAP_OPT_PROTOCOL_VERSION, 3);
-        ldap_set_option($LDAP, LDAP_OPT_REFERRALS, 0);
-        $bind = @ldap_bind($LDAP, $settings['ldap']['domain']."\\".$LDAPUSER, $LDAPPASS);
-        if($bind){
-            $_SESSION['LDAPUSER']=$LDAPUSER;
-        } else {
-            $ERROR="Wrong username and/or password";
-        }
+  if(isset($_POST['LDAPUSER']) and isset($_POST['LDAPPASS']) and ($_POST['LDAPUSER'] != "") and ($_POST['LDAPPASS'] != "")){
+    $LDAPUSER=$_POST['LDAPUSER'];
+    $LDAPPASS=$_POST['LDAPPASS'];
+    $LDAP = ldap_connect("ldap://".$settings['ldap']['host']);
+    ldap_set_option($LDAP, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($LDAP, LDAP_OPT_REFERRALS, 0);
+    $bind = @ldap_bind($LDAP, $settings['ldap']['domain']."\\".$LDAPUSER, $LDAPPASS);
+    if($bind){
+      $_SESSION['LDAPUSER']=$LDAPUSER;
+    } else {
+      $ERROR="Wrong username and/or password";
     }
+  }
 }
 if(isset($_SESSION['LDAPUSER'])){
     include('Net/SSH2.php');
