@@ -5,9 +5,6 @@ session_start();
 // Import Configurations
 $settings=json_decode(file_get_contents(dirname(__FILE__) . '/settings.json'),true);
 
-// Disable Error Reporting
-// error_reporting(0);
-
 if(isset($_SESSION['LDAPUSER'])){
   if(isset($_POST['ACTION']) and ($_POST['ACTION'] == "logout")){
     session_destroy();
@@ -21,6 +18,8 @@ if(isset($_SESSION['LDAPUSER'])){
   if(isset($_POST['LDAPUSER']) and isset($_POST['LDAPPASS']) and ($_POST['LDAPUSER'] != "") and ($_POST['LDAPPASS'] != "")){
     $LDAPUSER=$_POST['LDAPUSER'];
     $LDAPPASS=$_POST['LDAPPASS'];
+    // Disable Error Reporting
+    error_reporting(0);
     $LDAP = ldap_connect("ldap://".$settings['ldap']['host']);
     ldap_set_option($LDAP, LDAP_OPT_PROTOCOL_VERSION, 3);
     ldap_set_option($LDAP, LDAP_OPT_REFERRALS, 0);
@@ -30,6 +29,8 @@ if(isset($_SESSION['LDAPUSER'])){
     } else {
       $ERROR="Wrong username and/or password";
     }
+    // Enable Error Reporting
+    error_reporting(-1);
   }
 }
 if(isset($_SESSION['LDAPUSER'])){
