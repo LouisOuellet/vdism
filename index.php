@@ -5,7 +5,7 @@ session_start();
 // Import Configurations
 $settings=json_decode(file_get_contents(dirname(__FILE__) . '/settings.json'),true);
 
-var_dump(dirname(__FILE__) . '/settings.json'));
+var_dump(dirname(__FILE__) . '/settings.json');
 var_dump($settings);
 
 if(isset($_SESSION['LDAPUSER'])){
