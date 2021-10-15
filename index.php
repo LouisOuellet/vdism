@@ -1,25 +1,30 @@
 <?php
+// Start Session
 session_start();
-include('config.php');
+
+// Import Configurations
+$settings=json_decode(file_get_contents(dirname(__FILE__) . '/settings.json'),true);
+
+// Disable Error Reporting
 error_reporting(0);
 
 if(isset($_SESSION['LDAPUSER'])){
-    if(isset($_POST['ACTION']) and ($_POST['ACTION'] == "logout")){
-        session_destroy();
-        header('Refresh: ' . 0);
-    }
-    if(isset($_GET['ACTION']) and ($_GET['ACTION'] == "logout")){
-        session_destroy();
-        header('Refresh: ' . 0);
-    }
+  if(isset($_POST['ACTION']) and ($_POST['ACTION'] == "logout")){
+    session_destroy();
+    header('Refresh: ' . 0);
+  }
+  if(isset($_GET['ACTION']) and ($_GET['ACTION'] == "logout")){
+    session_destroy();
+    header('Refresh: ' . 0);
+  }
 } else {
     if(isset($_POST['LDAPUSER']) and isset($_POST['LDAPPASS']) and ($_POST['LDAPUSER'] != "") and ($_POST['LDAPPASS'] != "")){
         $LDAPUSER=$_POST['LDAPUSER'];
         $LDAPPASS=$_POST['LDAPPASS'];
-        $LDAP = ldap_connect("ldap://$LDAPSRV");
+        $LDAP = ldap_connect("ldap://$settings['ldap']['host']");
         ldap_set_option($LDAP, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($LDAP, LDAP_OPT_REFERRALS, 0);
-        $bind = @ldap_bind($LDAP, $LDAPDN."\\".$LDAPUSER, $LDAPPASS);
+        $bind = @ldap_bind($LDAP, $settings['ldap']['domain']."\\".$LDAPUSER, $LDAPPASS);
         if($bind){
             $_SESSION['LDAPUSER']=$LDAPUSER;
         } else {
@@ -30,23 +35,23 @@ if(isset($_SESSION['LDAPUSER'])){
 if(isset($_SESSION['LDAPUSER'])){
     include('Net/SSH2.php');
     include('Crypt/RSA.php');
-    $ssh = new Net_SSH2($VDIHOST);
+    $ssh = new Net_SSH2($settings['vdi']['host']);
     $key = new Crypt_RSA();
-    if(isset($VDIPASS) and ($VDIPASS != "")){
-        if(isset($VDIKEY) and ($VDIKEY != "")){
-            $key->setPassword("$VDIPASS");
-            $key->loadKey(file_get_contents("$VDIKEY"));
+    if(isset($settings['vdi']['password']) and ($settings['vdi']['password'] != "")){
+        if(isset($settings['vdi']['key']) and ($settings['vdi']['key'] != "")){
+            $key->setPassword("$settings['vdi']['password']");
+            $key->loadKey(file_get_contents("$settings['vdi']['key']"));
             if (!$ssh->login('username', $key)) {
                 $ERROR="Wrong username and/or password and/or key";
             }
         } else {
-            if (!$ssh->login($VDIUSER, $VDIPASS)) {
+            if (!$ssh->login($settings['vdi']['username'], $settings['vdi']['password'])) {
                 $ERROR="Wrong username and/or password";
             }
         }
     } else {
-        if(isset($VDIKEY) and ($VDIKEY != "")){
-            $key->loadKey(file_get_contents("$VDIKEY"));
+        if(isset($settings['vdi']['key']) and ($settings['vdi']['key'] != "")){
+            $key->loadKey(file_get_contents("$settings['vdi']['key']"));
             if (!$ssh->login('username', $key)) {
                 $ERROR="Wrong username and/or key";
             }
@@ -77,8 +82,8 @@ if(isset($_SESSION['LDAPUSER'])){
         }
         $VMStatus=$ssh->exec("qm status $VMID");
         $VMStatus=str_replace("status: ","",$VMStatus);
-        $VMDNS="$VMName.$VDIDN";
-        $VMService=$ssh->exec("nmap -Pn -p $VDIPORT $VMDNS | grep $VDIPORT | awk {'print $2'}");
+        $VMDNS="$VMName.$settings['vdi']['domain']";
+        $VMService=$ssh->exec("nmap -Pn -p $settings['vdi']['port'] $VMDNS | grep $settings['vdi']['port'] | awk {'print $2'}");
         $VDILatency=$ssh->exec("fping -c 1 $VMDNS 2>/dev/null | awk {'print $6'}");
         $VMLatency=exec("fping -c 1 $VMDNS 2>/dev/null | awk {'print $6'}");
     }
