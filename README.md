@@ -17,7 +17,7 @@ This software requires access to these commands on the VDI server:
 
 ## How it Works
 
-Basically when the login is submitted, the software tries the set of credentials against the LDAP Host provided in the `config.php` file. Then when a user initiates one of the 3 actions (Start, Stop, Restart) the software connects to the VDI server using SSH to perform the requested task.
+Basically when the login is submitted, the software tries the set of credentials against the LDAP Host provided in the `settings.json` file. Then when a user initiates one of the 3 actions (Start, Stop, Restart) the software connects to the VDI server using SSH to perform the requested task.
 
 ## How to Configure
 
@@ -52,20 +52,21 @@ cd /var/www/html/
 git clone http://git.laswitchtech.com/louis/vdism.git
 ```
 
-Finally configure the software by editing your `config.php` file. And you are done.
+Finally configure the software by editing your `settings.json` file. And you are done.
 
-```php
-<?php
-//LDAP Server IP and DOMAIN
-$LDAPSRV="x.x.x.x";
-$LDAPDN="DOMAIN";
-
-//VDI Server IP, Username, Password, ssh-key file, Lowercase domain used with DNS and Watched port
-$VDIHOST="x.x.x.x";
-$VDIUSER="username";
-$VDIPASS="password";
-$VDIKEY="id_rsa.key";
-$VDIDN="domain";
-$VDIPORT="3389";
-?>
+```json
+{
+    "vdi":{
+        "host": "X.X.X.X",
+        "username": "username",
+        "password": "Password",
+        "port": "3389",
+        "key": "id_rsa.key",
+        "domain": "domain"
+    },
+    "ldap":{
+        "host": "X.X.X.X",
+        "domain": "DOMAIN"
+    },
+}
 ```
